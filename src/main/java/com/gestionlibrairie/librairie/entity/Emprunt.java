@@ -19,4 +19,14 @@ public class Emprunt {
     @ManyToOne
     @JoinColumn(name = "livre_id")
     private Livre livre;
+
+    @Override
+    public String toString() {
+        return "Emprunt{" +
+                "id=" + id +
+                ", quantiteLivre=" + quantiteLivre +
+                ", user=" + (user != null ? user.getId() : null) +
+                ", livre=" + (livre != null ? livre.getId() : null) +
+                '}';
+    }
 }

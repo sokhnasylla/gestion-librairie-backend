@@ -24,6 +24,7 @@ public class UserImpl implements UserService{
         List<ReqRes> reqResList = new ArrayList<>();
         for(User user : users){
             ReqRes reqRes = new ReqRes();
+            reqRes.setId(user.getId());
             reqRes.setPrenom(user.getPrenom());
             reqRes.setNom(user.getNom());
             reqRes.setRole(user.getRole());
@@ -34,6 +35,7 @@ public class UserImpl implements UserService{
     }
     @Override
     public User updateUser(User user, Long id) {
+        System.out.println("okkkkkkkkk to update !!!");
         Optional<User> searchUpdateUser =userRepo.findById(id);
 
         if(searchUpdateUser.isEmpty()){
@@ -45,6 +47,9 @@ public class UserImpl implements UserService{
         userFound.setLogin(user.getLogin());
         userFound.setPassword(user.getPassword());
         userFound.setRole(user.getRole());
+
+        System.out.println(" ======================= ==================== "+userFound);
+
         return userRepo.save(userFound);
     }
 

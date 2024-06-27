@@ -27,6 +27,7 @@ public class LivreImpl implements LivreService{
         List<ReqRes> reqResList = new ArrayList<>();
         for(Livre livre : livres){
             ReqRes reqRes = new ReqRes();
+            reqRes.setId(livre.getId());
             reqRes.setImage(livre.getImage());
             reqRes.setTitre(livre.getTitre());
             reqRes.setAuteur(livre.getAuteur());
@@ -72,8 +73,9 @@ public class LivreImpl implements LivreService{
         }
         Livre livreFound = livreSearched.get();
         livreFound.setEtat(ETAT_LIVRE.SUPPRIME.toString());
-
+        livreRepo.save(livreFound);
     }
+
 
     @Override
     public List<ReqRes> searchedByTitre(String titre) {

@@ -34,9 +34,16 @@ public class LivreController {
             livreSave.setGenre(livreRequest.getGenre());
             livreSave.setAuteur(livreRequest.getAuteur());
             livreSave.setDatePublication(livreRequest.getDatePublication());
-            livreSave.setImage(livreRequest.getImage());
+            if (livreRequest.getImage() != null && livreRequest.getImage().startsWith("data:image")) {
+                livreSave.setImage(livreRequest.getImage().split(",")[1]);
+            } else {
+                livreSave.setImage(livreRequest.getImage());
+            }
+
             livreSave.setDetails(livreRequest.getDetails());
             livreSave.setEtat(ETAT_LIVRE.DISPO.toString());
+
+
             return ResponseEntity.ok(livreRepo.save(livreSave));
         }
 
@@ -49,6 +56,7 @@ public class LivreController {
         livreService.deleteLivreById(id);
         return "Livre supprimé";
     }
+
     @GetMapping("public/searchlivre")
     public ResponseEntity<List<ReqRes>> searchByTitre(@RequestParam String titre) {
         List<ReqRes> result = livreService.searchedByTitre(titre);

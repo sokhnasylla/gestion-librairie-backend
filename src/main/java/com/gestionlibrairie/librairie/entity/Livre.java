@@ -18,6 +18,7 @@ public class Livre {
     private String theme;
     private String genre;
     private String etat;
+    @Lob
     private String details;
     private Date datePublication;
     @Lob
