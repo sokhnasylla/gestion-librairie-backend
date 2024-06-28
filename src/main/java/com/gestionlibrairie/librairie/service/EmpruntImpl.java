@@ -5,6 +5,8 @@ import com.gestionlibrairie.librairie.dto.ReqRes;
 import com.gestionlibrairie.librairie.entity.Emprunt;
 import com.gestionlibrairie.librairie.entity.Livre;
 import com.gestionlibrairie.librairie.entity.User;
+import com.gestionlibrairie.librairie.enums.ETAT_EMP;
+import com.gestionlibrairie.librairie.exception.MyNotFoundExceptionClass;
 import com.gestionlibrairie.librairie.repository.EmpruntRepo;
 import com.gestionlibrairie.librairie.repository.LivreRepo;
 import com.gestionlibrairie.librairie.repository.UserRepo;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class EmpruntImpl implements EmpruntService {
 
@@ -26,16 +30,18 @@ public class EmpruntImpl implements EmpruntService {
     private LivreRepo livreRepo;
 
     @Override
-    public List<ReqRes> getAllEmprunts() {
-        List<Emprunt> emprunts = empruntRepo.findAll();
-        List<ReqRes> reqResList = new ArrayList<>();
+    public List<EmpruntRes> getAllEmprunts() {
+        List<Emprunt> emprunts = empruntRepo.findAllByEtatNot(ETAT_EMP.RENDU.toString());
+        List<EmpruntRes> empruntResList = new ArrayList<>();
         for (Emprunt emprunt : emprunts) {
-            ReqRes reqRes = new ReqRes();
-            reqRes.setUser(emprunt.getUser());
-            // Add other properties as needed
-            reqResList.add(reqRes);
+            EmpruntRes empruntRes = new EmpruntRes();
+            empruntRes.setId(emprunt.getId());
+            empruntRes.setUserId(emprunt.getUser().getId());
+            empruntRes.setLivreId(emprunt.getLivre().getId());
+            empruntRes.setQuantiteLivre(emprunt.getQuantiteLivre());
+            empruntResList.add(empruntRes);
         }
-        return reqResList;
+        return empruntResList;
     }
 
     @Override
@@ -49,5 +55,16 @@ public class EmpruntImpl implements EmpruntService {
         emprunt.setUser(user);
         emprunt.setLivre(livre);
         return empruntRepo.save(emprunt);
+    }
+
+    @Override
+    public void deleteEmpruntById(Long id) {
+        Optional<Emprunt>empruntSearched = empruntRepo.findById(id);
+        if(empruntSearched.isEmpty()){
+            throw new MyNotFoundExceptionClass("emprunt non trouvé avec l'identifiant");
+        }
+        Emprunt empruntFound = empruntSearched.get();
+        empruntFound.setEtat(ETAT_EMP.RENDU.toString());
+        empruntRepo.save(empruntFound);
     }
 }

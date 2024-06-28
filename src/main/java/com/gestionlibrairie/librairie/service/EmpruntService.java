@@ -7,6 +7,7 @@ import com.gestionlibrairie.librairie.entity.Emprunt;
 import java.util.List;
 
 public interface EmpruntService {
-    List<ReqRes> getAllEmprunts();
+    List<EmpruntRes> getAllEmprunts();
     Emprunt createEmprunt(EmpruntRes empruntRes);
+    void deleteEmpruntById(Long id);
 }
